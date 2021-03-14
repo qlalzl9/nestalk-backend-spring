@@ -53,4 +53,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional(readOnly = true)
+    public String findEmailByNameAndPhone(String name, String phone) {
+        return userRepository.findByNameAndPhone(name, phone)
+                .map(User::getEmail)
+                .orElseThrow(() -> new NotFoundException(User.class, name, phone));
+    }
 }

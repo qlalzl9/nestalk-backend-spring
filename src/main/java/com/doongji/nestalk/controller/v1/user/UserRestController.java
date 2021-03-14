@@ -1,8 +1,6 @@
 package com.doongji.nestalk.controller.v1.user;
 
-import com.doongji.nestalk.controller.v1.user.dto.JoinRequest;
-import com.doongji.nestalk.controller.v1.user.dto.JoinResult;
-import com.doongji.nestalk.controller.v1.user.dto.UserDto;
+import com.doongji.nestalk.controller.v1.user.dto.*;
 import com.doongji.nestalk.entity.user.Role;
 import com.doongji.nestalk.entity.user.User;
 import com.doongji.nestalk.security.Jwt;
@@ -55,4 +53,10 @@ public class UserRestController {
         );
     }
 
+    @ApiOperation(value = "이메일 찾기 (JWT 불필요)")
+    @PostMapping(path = "user/email")
+    public ResponseEntity<FindEmailResponse> checkEmail(@RequestBody FindEmailRequest request) {
+        String email = userService.findEmailByNameAndPhone(request.getName(), request.getPhone());
+        return ResponseEntity.ok(new FindEmailResponse(email));
+    }
 }
