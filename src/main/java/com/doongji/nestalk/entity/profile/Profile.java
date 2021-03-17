@@ -48,4 +48,8 @@ public class Profile extends BaseTimeEntity {
         this.profileImage = profileImage;
         this.backgroundImage = backgroundImage;
     }
+
+    public void updateUser(User user) {
+        this.user = user;
+    }
 }

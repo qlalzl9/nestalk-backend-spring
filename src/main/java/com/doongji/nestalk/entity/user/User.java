@@ -1,6 +1,7 @@
 package com.doongji.nestalk.entity.user;
 
 import com.doongji.nestalk.entity.BaseTimeEntity;
+import com.doongji.nestalk.entity.profile.Profile;
 import com.doongji.nestalk.security.Jwt;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.regex.Pattern.matches;
+import static javax.persistence.FetchType.LAZY;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Getter
@@ -38,6 +40,10 @@ public class User extends BaseTimeEntity {
 
     @Column(nullable = false)
     private LocalDate birthday;
+
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "PROFILE_ID")
+    private Profile profile;
 
     public User(String email, String name, String password, String phone, LocalDate birthday) {
         this(null, email, name, password, phone, birthday);
@@ -84,6 +90,11 @@ public class User extends BaseTimeEntity {
     public String createToken(Jwt jwt, String[] roles) {
         Jwt.Claims claims = Jwt.Claims.of(userId, email, roles);
         return jwt.newToken(claims);
+    }
+
+    public void updateProfile(Profile profile) {
+        this.profile = profile;
+        profile.updateUser(this);
     }
 
 }
